@@ -1,4 +1,4 @@
-name: "my-website"
+name: "Drug-Poisoning-Deaths-in-Recent-Twenty-Years"
 output_dir: docs
 # The website theme "cosmo" was chosen from
 # https://bootswatch.com/3/
@@ -20,6 +20,3 @@ navbar:
       href: index.html
     - text: "More info"
       href: more_info.html
-#  right:
-#    - icon: fa-slack fa-lg
-#      href: https://2018-fall-sds-albert.slack.com/
