@@ -1,0 +1,25 @@
+Ten-Year Age Groups,Ten-Year Age Groups Code,Drug/Alcohol Induced,Drug/Alcohol Induced Code,Gender,Gender Code,Deaths,Population,Crude Rate
+< 1 year,1,Drug-induced causes,D,Female,F,278 ,40650234,0.7
+< 1 year,1,Drug-induced causes,D,Male,M,346 ,42528512,0.8
+1-4 years,1-4,Drug-induced causes,D,Female,F,350 ,162816906,0.2
+1-4 years,1-4,Drug-induced causes,D,Male,M,449 ,170187191,0.3
+5-14 years,5-14,Drug-induced causes,D,Female,F,558 ,420388782,0.1
+5-14 years,5-14,Drug-induced causes,D,Male,M,526 ,439842385,0.1
+15-24 years,15-24,Drug-induced causes,D,Female,F,20404 ,435531515,4.7
+15-24 years,15-24,Drug-induced causes,D,Male,M,53715 ,457707523,11.7
+25-34 years,25-34,Drug-induced causes,D,Female,F,55140 ,433305919,12.7
+25-34 years,25-34,Drug-induced causes,D,Male,M,129323 ,440713904,29.3
+35-44 years,35-44,Drug-induced causes,D,Female,F,79404 ,446617411,17.8
+35-44 years,35-44,Drug-induced causes,D,Male,M,142974 ,442533685,32.3
+45-54 years,45-54,Drug-induced causes,D,Female,F,94048 ,450627604,20.9
+45-54 years,45-54,Drug-induced causes,D,Male,M,143505 ,436582483,32.9
+55-64 years,55-64,Drug-induced causes,D,Female,F,51519 ,375043243,13.7
+55-64 years,55-64,Drug-induced causes,D,Male,M,76994 ,348977927,22.1
+65-74 years,65-74,Drug-induced causes,D,Female,F,14112 ,256562910,5.5
+65-74 years,65-74,Drug-induced causes,D,Male,M,17975 ,221346033,8.1
+75-84 years,75-84,Drug-induced causes,D,Female,F,6624 ,164199132,4
+75-84 years,75-84,Drug-induced causes,D,Male,M,5636 ,117853754,4.8
+85+ years,85,Drug-induced causes,D,Female,F,3816 ,76032227,5
+85+ years,85,Drug-induced causes,D,Male,M,2494 ,36823244,6.8
+Not Stated,NS,Drug-induced causes,D,Female,F,48 ,Not Applicable,Not Applicable
+Not Stated,NS,Drug-induced causes,D,Male,M,150 ,Not Applicable,Not Applicable

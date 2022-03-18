@@ -1,0 +1,62 @@
+---
+title: "Drug-Poisoning Deaths in Recent 20 Years"
+author: "Sylvia Tan and Zhirou Liu"
+date: "Last updated on `r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    df_print: kable
+    code_folding: hide
+---
+
+# Background
+
+Drug poisoning, both pharmaceutical and illicit, is the leading cause of injury death in the United States. Deaths are classified using the International Classification of Diseases, Tenth Revision (ICD–10). Drug-poisoning deaths are defined as having ICD–10 underlying cause-of-death codes X40–X44 (unintentional), X60–X64 (suicide), X85 (homicide), or Y10–Y14 (undetermined intent).
+
+With the development of education and the raising awareness of drugs' negative effects for the public, the mortality rate of drug poisoning has been decreasing in recent years. However, according to The National Center for Health Statistics (NCHS), from 1999 to 2016, drug-poisoning death rates more than tripled, from 6.1 per 100,000 to 19.8 per 100,000. We sought to understand the pattern of drug-poisoning deaths and the trend that we should pay attention to in recent years.
+
+# Introduction to Drug-poisoning deaths in United States
+
+```{r, include = FALSE}
+library(tidyverse)
+library(sf)
+library(USAboundaries)
+library(tidycensus)
+library(tmaptools)
+library(stringr)
+```
+
+This graph demonstrates the total number of drug poisoning deaths at the state level from 1999 to 2019. We can see a big difference in fatalities across different states. In California, Florida, New York, Ohio, Pennsylvania, and Texas, deaths are significantly higher. In comparison, the number in Montana, Nebraska, North and South Dakota, Vermont, and Wyoming is much lower.
+
+```{r}
+mortality <- "Drug_Poisoning_Mortality.csv" %>%
+  read_sf() %>%
+  rename(ID=State) %>% 
+  mutate(ID=str_to_lower(ID)) %>% 
+  select(ID, Deaths) %>% 
+  group_by(ID) %>%
+  summarize(Deaths=sum(as.numeric(Deaths)))
+
+USA_map <-  maps::map("state", plot = FALSE, fill = TRUE)
+
+USA_sf <- USA_map %>% 
+  st_as_sf(crs = 4326)
+
+mortality_sf<-USA_sf %>% 
+  left_join(mortality,by='ID') %>% 
+  mutate( Deaths =cut_number(Deaths, 9))
+
+ggplot() +
+  geom_sf(data = mortality_sf, aes(fill=Deaths))+
+  scale_fill_brewer(name="Number of Deaths")+
+  labs(title="Number of Drug Poisoning induced Deaths by State", 
+       subtitle="through 1999-2019")
+```
+
+References:
+
+1. NCHS Data on Drug-poisoning Deaths. (2018, October). Retrieved December 10, 2021, from https://www.cdc.gov/nchs/data/factsheets/factsheet-drug-poisoning.htm.
+ 
+2. NCHS - Drug Poisoning Mortality by State: United States Metadata Updated: May 1, 2021. (2019–2020, April 26–September 8). [Dataset]. Centers for Disease Control and Prevention. https://catalog.data.gov/dataset/nchs-drug-poisoning-mortality-by-state-united-states
