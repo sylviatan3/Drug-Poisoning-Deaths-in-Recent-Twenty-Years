@@ -1,0 +1,91 @@
+---
+title: "Drug-Poisoning Deaths in Recent Twenty Years"
+author: "Sylvia Tan and Zhirou Liu"
+date: "Last updated on `r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    df_print: kable
+    code_folding: hide
+---
+
+# Age and Gender
+
+```{r, include = FALSE}
+library(tidyverse)
+library(sf)
+library(USAboundaries)
+library(tidycensus)
+library(tmaptools)
+library(stringr)
+```
+
+We also want to investigate the potential factors of drug-poisoning deaths. The graph below demonstrates the number of deaths in different age groups and genders. Overall, we can see that fewer females died from drug poisoning in almost all age groups. More than 500,000 people who died from drug poisoning are aged between 35-54 years old. The number of deaths below 24 years old and above 65 years old is significantly smaller than that of people who died between 25-64 years old.
+
+```{r}
+age_gender<-read.csv("Age_Gender.csv") %>% 
+  select(Deaths,Ten.Year.Age.Groups.Code, Gender) %>% 
+  mutate(Deaths=as.numeric(Deaths)) 
+
+ggplot(data=age_gender,aes(x=Ten.Year.Age.Groups.Code, y=Deaths,fill=Gender))+
+  geom_col(position="dodge")+
+  scale_x_discrete(limits=c("1","1-4","5-14","15-24","25-34","35-44","45-54", 
+                            "55-64","65-74","75-84","85","NS"))+
+  labs(title="Number of Drug Poisoning Induced Deaths by Age and Gender", 
+       subtitle="Through 1999-2019", y="Number of Deaths",
+       x="Age Groups")
+```
+
+
+# Future Trends
+This figure selects the top three states with the highest total number of drug poisoning mortality from 1999-2019, including California, Florida, and Pennsylvania. We can see that all three states have had an increasing number of mortality throughout the years. 
+
+```{r}
+Drug_mortality <- read.csv("Drug_Poisoning_Mortality.csv")
+Mortality_state <- Drug_mortality %>% 
+  filter(State == "California"|State == "Florida" | State == "Pennsylvania") %>%
+  mutate(Age.adjusted.Rate = Age.adjusted.Rate)
+
+ggplot(Mortality_state, aes(x=Year, y=Deaths, color=State))+
+  geom_line()+ labs(title="Number of Drug Poisoning Induced Deaths in Top 3 States", 
+                    subtitle = "Through 1999-2018")
+```
+
+
+# Comparison to Other Causes
+The visualization above makes us wonder if drug poisoning can be counted as one of the significant causes of death in the states. Therefore, we use the 10 major causes of death recognized by the public to compare to the mortality of drug poisoning in 1999-2017. The following figure shows that cancer and heart disease are the top two main factors. Nevertheless, drug poisoning death has a close number with influenza, kidney diseases, and suicide. With the increasing trend of drug poisoning mortality, the consequences of drug abuse deserve more attention from the public.
+
+```{r}
+causes_of_death <- read.csv("Leading_Causes_of_Death.csv") %>% 
+  filter(State == "United States") %>% 
+  filter(!(Cause.Name == "All causes"))
+
+Drug_mortality <- Drug_mortality %>% 
+  filter(State == 
+           "United States" & Age.Group == "All Ages" & 
+           Race.and.Hispanic.Origin == "All Races-All Origins" & 
+           Sex == "Both Sexes" & 
+           !(Year == "2018")) %>% 
+  mutate(Cause.Name="Drug Poisoning")
+
+Death_cause_joined <- causes_of_death %>%
+  full_join(Drug_mortality, by = c("Year","Cause.Name","Deaths"))
+
+ggplot(data = Death_cause_joined, mapping = aes(x = Cause.Name, y = Deaths, fill = Cause.Name))+
+  geom_col(color = "white") +
+  facet_wrap(~ Year)+
+  theme(axis.text.x =   element_blank())+
+  labs(title="Comparison of Top 10 Causes of Deaths", 
+       subtitle="Through 1999-2017",x="",
+       y="Number of Deaths", fill="Cause Name")
+```
+
+References:
+
+1. Centers for Disease Control and Prevention, National Center for Health Statistics. Underlying Cause of Death 1999-2019 on CDC WONDER Online Database, released in 2020. Data are from the Multiple Cause of Death Files, 1999-2019, as compiled from data provided by the 57 vital statistics jurisdictions through the Vital Statistics Cooperative Program. Accessed at http://wonder.cdc.gov/ucd-icd10.html on Dec 10, 2021 7:14:25 PM
+
+2. NCHS - Drug Poisoning Mortality by State: United States. Retrieved from https://catalog.data.gov/dataset/nchs-drug-poisoning-mortality-by-state-united-states
+
+3. NCHS - Leading Causes of Death: United States. Retrived from https://catalog.data.gov/dataset/nchs-leading-causes-of-death-united-states
